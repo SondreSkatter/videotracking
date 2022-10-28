@@ -1,0 +1,62 @@
+{%extends "main.layout.html"%}
+{%block content%}
+<div style="margin: 50px">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+            <p>Search by Date</p>
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <input text="text" name="date-range" value="Select Date Range" style="width: 200px">
+            </div>
+            <div id="search-result"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function is_object_id(object_id) {
+        return object_id.match('^[0-9a-f]{24}$') !== null;
+    }
+    function convert_base64_to_image(image_data)
+    {
+        return "data:image/png;base64," + image_data
+    }
+    $(function() {
+        $('input[name="date-range"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            const created_after = start.format('YYYY-MM-DD');
+            const created_before =  end.format('YYYY-MM-DD');
+            const url =  '/v1/person?created_after=' + encodeURI(created_after) + '&created_before=' + encodeURI(created_before) + '&field=name&field=date&field=image'
+            const resultElement = $('#search-result');
+            resultElement.html('');
+            axios.get(url)
+                    .then(function(response) {
+                        const result = response.data;
+                        if(result.data){
+                            const number_of_persons = result.data.length;
+                            const $search_result_count = $('<p>').text(`${number_of_persons} records found`);
+                            resultElement.append($search_result_count);
+                            result.data.forEach(
+                                function(person) {
+                                    const image = convert_base64_to_image(person.image);
+                                    const $div_container = $('<div>',{ style: 'width: 300px; margin: 0 auto;'});
+                                    const $image = $('<img>', {src: image, style: 'margin-top:10px; margin-bottom:10px;'});
+                                    const $name = $('<p>').text(`Name: ${person.name}`);
+                                    const $id = $('<p>').text(`Id: ${person.id}`);
+                                    const $date = $('<p>').text(`Created Date: ${person.date}`);
+                                    $div_container.append($image);
+                                    $div_container.append($name);
+                                    $div_container.append($id);
+                                    $div_container.append($date);
+                                    resultElement.append($div_container);
+                                }
+                            );
+                        }
+                        else {
+                            const $search_result_count = $('<p>').text(`No records found`);
+                            resultElement.append($search_result_count);
+                        }
+                    });
+        });
+    });
+</script>
+{%endblock%}

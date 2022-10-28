@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ca66cd5c-9f9e-4ce8-849c-cbbcb242f3e0}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>tests\dbg_ver_forge_video_tracker.py</StartupFile>
+    <SearchPath>utils;camera_calib_tools;..\posenetpython</SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="bgtracker.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\calibrate_camera.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\select_camera_to_calibrate.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\step2_mark_and_measure_physical_points.py" />
+    <Compile Include="camera_calib_tools\step4_determine_camera_pose.py" />
+    <Compile Include="camera_calib_tools\step6_validate_cal.py" />
+    <Compile Include="cam_capture.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="face_api_client.py" />
+    <Compile Include="face_request_worker.py" />
+    <Compile Include="human_detector_pose_est.py" />
+    <Compile Include="inference_yolo.py" />
+    <Compile Include="pose_analyzer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="static_objects_pose_est.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="scene_manager.py" />
+    <Compile Include="tests\dbg_ver_forge_video_tracker.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\GPUprofiler.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\gpu_stress_test.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\multiprocess_stress_test.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_face_api.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\view_detected_poses.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tracker_viz_mgr.py" />
+    <Compile Include="tracks.py" />
+    <Compile Include="utils\characterize_intersect-wildtrack.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\custom_queue.py" />
+    <Compile Include="utils\denseNN.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\graph_helper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\GT_labeling_tool.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\map_scene_elevation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\pose_estimator_tester.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\prepare_wildtrack_dataset.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\posenet_helper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\extract_video_frame.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\prepare_cal_oxford.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\shorten_video.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\towncentreGT.py" />
+    <Compile Include="video_channels.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\step3_chessboard_cal.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\step1_collect_checkerboard_data.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\step5_determine_reference_point.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera_calib_tools\step2b_enter_measured_dists.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="camera.py" />
+    <Compile Include="forge_video_tracker.py" />
+    <Compile Include="tests\live_camera.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_tracker.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\bounding_box_stuff.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\chidistdf.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils\tdist.py" />
+    <Compile Include="utils\wildtrackGT.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="camera_calib_tools\images\axis-pole\axis-polecalibrationFile.txt" />
+    <Content Include="camera_calib_tools\images\axis-wall\axis-wallcalibrationFile.txt" />
+    <Content Include="requirements.txt">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="sampledata\towncentre\TownCentre-calibration.ci.txt" />
+    <Content Include="sampledata\towncentre\TownCentre-calibration.ci.txtinv.txt" />
+    <Content Include="statusnotes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="camera_calib_tools\" />
+    <Folder Include="camera_calib_tools\images\" />
+    <Folder Include="camera_calib_tools\images\axis-pole\" />
+    <Folder Include="camera_calib_tools\images\axis-wall\" />
+    <Folder Include="utils\" />
+    <Folder Include="tests\" />
+    <Folder Include="sampledata\" />
+    <Folder Include="sampledata\towncentre" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

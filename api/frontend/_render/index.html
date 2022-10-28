@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Foogle</title>
+ 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Face Lab</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/settings.html">Set Names</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/history.html">History</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  
+<div style="margin: 50px">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+                <h1>Foogle</h1>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 50px;">
+                    <input id="search-txtbox" type="text" placeholder="Search by id or name" class = "form-control" style="width: 500px;" />
+                </div>
+            <div id ="search-result" style="margin: 20px"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function is_object_id(object_id) {
+        return object_id.match('^[0-9a-f]{24}$') !== null;
+    }
+    function convert_base64_to_image(image_data)
+    {
+        return "data:image/png;base64," + image_data
+    }
+    $('#search-txtbox').on('keypress', function (e) {
+        if(e.which === 13){
+            event.preventDefault();
+            search_text = e.target.value;
+            is_match = is_object_id(search_text);
+            const resultElement = $('#search-result');
+            resultElement.html('');
+            if(is_match === true) {
+                const url =  "http://localhost:5000" + '/v1/person/'+ encodeURI(search_text) + '?field=name&field=image&field=date'
+                axios.get(url)
+                    .then(function(response) {
+                        const result = response.data;
+                        if("data" in result){
+                            const image = convert_base64_to_image(result.data.image);
+                                const $div_container = $('<div>',{ style: 'width: 300px; margin: 0 auto;'});
+                                const $image = $('<img>', {src: image, style: 'margin-top:10px; margin-bottom:10px;'});
+                                const $name = $('<p>').text(`Name: ${result.data.name}`);
+                                const $id = $('<p>').text(`Id: ${result.data.id}`);
+                                const $date = $('<p>').text(`Created Date: ${result.data.date}`);
+                                $div_container.append($image);
+                                $div_container.append($name);
+                                $div_container.append($id);
+                                $div_container.append($date);
+                                resultElement.append($div_container);
+                        }
+                        else {
+                            resultElement.html('');
+                            const $error = $('<p>').text(`Name Not Found`);
+                            resultElement.append($error);
+                        }
+                    });
+            } else {
+                const url =   "http://localhost:5000" + '/v1/person?name=' + encodeURI(search_text) + '&field=date&field=name&field=image&field=date'
+                axios.get(url)
+                    .then(function(response) {
+                        const result = response.data;
+                        if("data" in result){
+                            result.data.forEach(function(person){
+                                const image = convert_base64_to_image(person.image);
+                                const $div_container = $('<div>',{ style: 'width: 300px; margin: 0 auto;'});
+                                const $image = $('<img>', {src: image, style: 'margin-top:10px; margin-bottom:10px;'});
+                                const $name = $('<p>').text(`Name: ${person.name}`);
+                                const $id = $('<p>').text(`Id: ${person.id}`);
+                                const $date = $('<p>').text(`Created Date: ${person.date}`);
+                                $div_container.append($image);
+                                $div_container.append($name);
+                                $div_container.append($id);
+                                $div_container.append($date);
+                                resultElement.append($div_container);
+                            })
+                        }
+                        else {
+                            resultElement.html('');
+                            const $error = $('<p>').text(`Name Not Found`);
+                            resultElement.append($error);
+                        }
+                    });
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>

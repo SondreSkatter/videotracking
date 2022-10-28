@@ -1,0 +1,108 @@
+{%extends "main.layout.html"%}
+{%block content%}
+<div style="margin: 50px">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+                <h1>Foogle</h1>
+                <p>Enter name or id to search. Hit enter on empty search box to view everything.</p>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 50px;">
+                    <input id="search-txtbox" type="text" placeholder="Search by id or name" class = "form-control" style="width: 500px;" />
+                </div>
+            <div id ="search-result" style="margin: 20px"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function generateDiv(data) {
+        const image = convert_base64_to_image(data.image);
+        const $div_container = $('<div>',{ style: 'width: 300px; margin: 0 auto;'});
+        const $image = $('<img>', {src: image, style: 'margin: 30px auto 20px auto; display:block;'});
+        var name = data.name ? data.name : 'Undefined'
+        const $name = $('<p>').text(`${name}`);
+        const $id = $('<p>').text(`Id: ${data.id}`);
+        const $date = $('<p>').text(`Created Date: ${data.date}`);
+        const $button = $('<button>', {class: 'btn btn-danger', text: 'Delete'})
+        $button.on('click', function(e) {
+            url =  '/v1/person/' + data.id
+            axios.delete(url)
+            .then(function(response) {
+                const result = response; 
+            }); 
+            $update.attr('disabled', true);
+            $button.attr('disabled', true);
+            $button.text('Deleted');
+        });
+        const $update = $('<button>', {class: 'btn btn-info', text: 'Update Name'})
+        $update.on('click', function(e) {
+            var $input = $('<input/>').val($name.text());
+            $name.replaceWith($input);
+            $input.on('keypress', function (e) {
+                if(e.which === 13){
+                    url =  '/v1/person/' + data.id
+                    data = {'name': $input.val()}
+                    axios.put(url, data)
+                    .then(function(response) {
+                        const result = response; 
+                    }); 
+                    $update.attr('disabled', true);
+                    $input.attr('disabled', true);
+                }
+            });
+        });
+        $div_container.append($image);
+        $div_container.append($name);
+        $div_container.append($id);
+        $div_container.append($date);
+        $div_container.append($button);
+        $div_container.append($update);
+        return $div_container;
+    }
+    function is_object_id(object_id) {
+        return object_id.match('^[0-9a-f]{24}$') !== null;
+    }
+    function convert_base64_to_image(image_data)
+    {
+        return "data:image/png;base64," + image_data
+    }
+    $('#search-txtbox').on('keypress', function (e) {
+        if(e.which === 13){
+            event.preventDefault();
+            search_text = e.target.value;
+            is_match = is_object_id(search_text);
+            const resultElement = $('#search-result');
+            resultElement.html('');
+            if(is_match === true) {
+                const url =  '/v1/person/'+ encodeURI(search_text) + '?field=name&field=image&field=date'
+                axios.get(url)
+                    .then(function(response) {
+                        const result = response.data;
+                        if("data" in result){
+                            resultElement.append(generateDiv(result.data));
+                        }
+                        else {
+                            resultElement.html('');
+                            const $error = $('<p>').text(`Name Not Found`);
+                            resultElement.append($error);
+                        }
+                    });
+            } else {
+                const url = '/v1/person?name=' + encodeURI(search_text) + '&field=date&field=name&field=image&field=date'
+                axios.get(url)
+                    .then(function(response) {
+                        const result = response.data;
+                        if(result.data.length > 0){
+                            result.data.forEach(function(person){
+                                resultElement.append(generateDiv(person));
+                            })
+                        }
+                        else {
+                            resultElement.html('');
+                            const $error = $('<p>').text(`Name Not Found`);
+                            resultElement.append($error);
+                        }
+                    });
+            }
+        }
+    });
+</script>
+{%endblock%}

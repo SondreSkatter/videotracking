@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+
+from glob import glob
+import sys
+import os
+from os import path
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+import yaml
+
+if __name__ == '__main__':
+    print('** RENDERING FRONTEND')
+
+    config_file = sys.argv[1] if len(sys.argv) > 1 else 'default-config.yml'
+    src_dir = 'src'
+    render_dir = '_render'
+
+    with open(config_file) as f:
+        config_data = yaml.load(f)
+
+    env = Environment(
+        loader=FileSystemLoader(src_dir),
+        autoescape=select_autoescape(['html'])
+    )
+
+    if not path.isdir(render_dir):
+        os.makedirs(render_dir)
+    jinja_files = glob(src_dir+'/**/*.jinja', recursive=True)
+    print(repr(jinja_files))
+
+    for source_path in jinja_files:
+        source = path.relpath(source_path, src_dir)
+        target, _ = path.splitext(source)
+        _, target_ext = path.splitext(target)
+        target_path = path.join(render_dir, target)
+        target_is_not_blacklisted = not target_ext == '.layout'
+        # target_does_not_exist = not path.exists(target_path)
+        # should_build = target_is_not_blacklisted and (target_does_not_exist or path.getmtime(target_path) < path.getmtime(source_path))
+        if target_is_not_blacklisted:
+            template = env.get_template(source)
+            output = template.render(config_data)
+            with open(target_path, "w") as text_file:
+                text_file.write(output)
+
+    print('** FINISHED')

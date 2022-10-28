@@ -1,0 +1,13 @@
+Notes to self while mothballing the tracker for a while (1/30/2020)
+
+Performance is OK, but metric still not up to teh level it was on Jan 21, which was an intermediary state. 
+The tracking, in this new architecture probably need more work... 
+
+I got some comfort when comparing these two versions for detection only. The newer version works better, so it must just be a matter of 
+improving the tracking portion (track_humans)
+
+When there is ambiguity, e.g. two persons matching another set of two persons, but not certainty as to who is who, then neither is included. 
+Probably, there should be a concept of temporary tracking representation for these...
+
+Also, the color feature doesn't seem to help as much as it ought to.
+

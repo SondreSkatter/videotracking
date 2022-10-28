@@ -1,0 +1,15 @@
+matplotlib
+numpy==1.15.2
+scipy
+opencv-python
+protobuf==3.6.1
+#cudnn==7.3.1
+#tensorflow-base==1.12.0 (with conda)
+tensorflow==1.12.0
+tensorflow-gpu==1.12.0
+asyncio
+aiohttp
+pyyaml
+scikit-learn
+cloudpickle==0.5.6 # gets rid of a nuisance warning from scikit-learn
+requests

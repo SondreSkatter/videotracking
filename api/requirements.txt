@@ -1,0 +1,13 @@
+flask
+mongoengine
+numpy
+opencv-python
+dlib
+flask_cors
+flask_appbuilder
+flask_mongoengine
+flask_redis
+apscheduler==2.1.2
+redis
+Pillow
+gunicorn
